@@ -2,9 +2,7 @@
 
 A minimal Quickshell top bar for omarchy. Kanagawa Dragon layout, kanji workspace markers, omarchy-theme-aware colors.
 
-```
-| omarchy | 一 二 三 四 五 ...        12:34 | 05 MAY        cpu net bt audio bat |
-```
+![navbar preview](assets/preview.png)
 
 ## Quick start
 
@@ -12,7 +10,7 @@ A minimal Quickshell top bar for omarchy. Kanagawa Dragon layout, kanji workspac
 git clone https://github.com/bjarneo/quickshell-navbar ~/.config/quickshell/navbar
 
 # disable omarchy's waybar (see below)
-touch ~/.local/state/omarchy/toggles/waybar-off
+omarchy toggle waybar
 
 # autostart on every Hyprland session
 install -m 755 ~/.config/quickshell/navbar/contrib/post-boot.d/quickshell-navbar \
@@ -37,21 +35,20 @@ Reload the Hyprland session (or run `omarchy-hook post-boot`) and the bar will a
 
 ## Toggle waybar
 
-omarchy launches waybar from `~/.local/share/omarchy/default/hypr/autostart.lua` only when the `waybar-off` toggle is *not* set. The toggle is a flag file:
+omarchy ships a one-shot toggle that flips waybar between enabled and disabled:
 
 ```sh
-# turn waybar off (use navbar instead)
-touch ~/.local/state/omarchy/toggles/waybar-off
-
-# turn waybar back on
-rm ~/.local/state/omarchy/toggles/waybar-off
-
-# kill or start waybar live, without re-login
-pkill waybar
-waybar &>/dev/null & disown
+omarchy toggle waybar
 ```
 
-The toggle is read at session start, so changing it only affects the next Hyprland launch. Use the `pkill` / re-launch pair above to swap bars in the current session.
+It's also bound to `SUPER + SHIFT + SPACE` out of the box. Under the hood it manages the `~/.local/state/omarchy/toggles/waybar-off` flag, which omarchy's autostart checks at session start.
+
+The toggle only affects whether waybar launches on the *next* Hyprland session. To swap bars live without re-login:
+
+```sh
+pkill waybar                          # stop the current waybar
+waybar &>/dev/null & disown           # or, to restart it
+```
 
 ## Theme reactivity
 
